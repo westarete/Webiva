@@ -545,7 +545,12 @@ class DomainFile < DomainModel
 
    # Just get get the local filename without forcing a copy
    def local_filename(size=nil,force=false)
-     "#{RAILS_ROOT}/public" + self.relative_filename(size,force);
+     relative = self.relative_filename(size,force)
+     if relative
+       "#{RAILS_ROOT}/public/#{relative}"
+     else
+       ""
+     end
    end
 
    def file_exists?(fl=nil)
