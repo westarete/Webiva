@@ -16,7 +16,7 @@ CREATE TABLE `permissions` (
 `perm_dest` VARCHAR( 4 ) NOT NULL ,
 `perm_dest_id` INT NOT NULL ,
 `perm_access` VARCHAR( 6 ) NOT NULL
-) TYPE = MYISAM ;
+);
 
 
 
@@ -35,7 +35,7 @@ CREATE TABLE `roles` (
 `role_source` VARCHAR( 4 ) NOT NULL ,
 `role_source_id` INT NOT NULL ,
 `role_name` VARCHAR( 16 ) NOT NULL
-) TYPE = MYISAM ;
+);
 
 
 ALTER TABLE `roles` ADD INDEX ( `role_name` ( 8 ) , `role_source` ( 4 ) , `role_source_id` );
