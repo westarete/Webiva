@@ -27,7 +27,6 @@ namespace :webiva do
     transaction do
 	    deploy.update_code
             modules_install     
-	    deploy.web.disable
 	    config
             run "cd #{deploy_to}/current; ./script/background.rb stop; true"
             run "cd #{deploy.release_path}; bundle install --deployment --path #{deploy.shared_path}/vendor/bundler --without development test"
@@ -40,7 +39,6 @@ namespace :webiva do
     end
 
    deploy.restart
-   deploy.web.enable
   end
 
 
