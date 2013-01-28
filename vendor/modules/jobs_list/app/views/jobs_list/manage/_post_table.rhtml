@@ -1,0 +1,29 @@
+<% current_time = Time.now %>
+<% active_table_for :post_table, @active_table_output,
+                    :refresh_url => url_for(:action => 'post_table', :path => @jobs_list.id),
+                    :class => 'active_table',
+                    :style => 'width:100%',
+                    :actions => [ [ 'Publish', 'publish', 'Publish the selected entries?' ],
+                      [ 'Unpublish','unpublish','Unpublish the selected entries?'],
+                      ['Duplicate','duplicate','Duplicate the selected entries?'],
+                      [ 'Delete Posts', 'delete', 'Are you sure you want to permanently delete the selected entries?' ]
+                                  
+                                ],
+                    :update => 'post_table' do |t| %>
+<tr <%= highlight_row 'post',t.id %> >
+  <td align='left' nowrap='1'><%= entry_checkbox "post", t.id %></td>
+  <td><a href='<%= url_for :action => 'post', :path => [ @jobs_list.id, t.id ] %>'><%= h t.active_revision.title %></a></td>
+  <td >
+    <% if (t.status == 'published' || t.status == 'preview') && t.content_node_link %>
+      <%= link_to theme_icon("table","icons/table_actions/preview.gif"), t.content_node_link %>
+    <% end -%>
+    <%= t.status_display %><%= " (Post Dated)" if t.published_at && t.published_at > current_time %>
+  </td>
+  <td align='center'><%= t.published_at ? t.published_at.localize(Configuration.datetime_format.t) : '-' %></td>
+  <td><a href='<%= url_for :action => 'post', :path => [ @jobs_list.id, t.id ] %>'><%= t.permalink %></a></td>
+  <td align='center'><%= t.updated_at ? t.updated_at.localize(Configuration.datetime_format.t) : '-' %></td>
+  <td><%= h t.jobs_list_categories.collect(&:name).join(", ") %></td>
+</tr>
+
+
+<% end -%>
