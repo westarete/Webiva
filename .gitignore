@@ -9,3 +9,6 @@ coverage/
 **/.DS_Store
 .DS_Store
 **/**/.DS_Store
+
+# RubyMine IDE settings
+/.idea
