@@ -19,7 +19,7 @@ class JobsList::ManageController < ModuleController
    active_table :post_table,
                 JobsList::JobsListPost,
                 [ hdr(:icon, '', :width=>10),
-                  hdr(:string, 'jobs_list_post_revisions.title', :label => 'Post Title'),
+                  hdr(:string, 'jobs_list_post_revisions.title', :label => 'Job Title'),
                   hdr(:options, 'jobs_list_posts.status', :label => 'Status', :options => JobsList::JobsListPost.status_select_options ),
                   :published_at,
                   :permalink,
@@ -131,9 +131,9 @@ class JobsList::ManageController < ModuleController
       require_js('cms_form_editor')
 
      if @entry
-       jobs_list_path(@jobs_list,[ 'Edit Entry: %s', nil, @entry.title ])
+       jobs_list_path(@jobs_list,[ 'Edit Job: %s', nil, @entry.title ])
      else
-       jobs_list_path(@jobs_list,"Post New Entry")
+       jobs_list_path(@jobs_list,"Post New Job")
        @entry = @jobs_list.jobs_list_posts.build()
      end
      @selected_category_ids = params[:categories] || @entry.category_ids
