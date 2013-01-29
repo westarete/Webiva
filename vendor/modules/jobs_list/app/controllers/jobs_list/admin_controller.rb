@@ -9,7 +9,7 @@ class JobsList::AdminController < ModuleController
                  :dependencies => [ 'feedback'] )
 
 
-  content_model :jobs_list
+  content_model :jobs_lists
 
   register_handler :structure, :wizard, "JobsList::AddJobsListWizard"
   register_handler :feed, :rss, "JobsList::RssHandler"
@@ -27,7 +27,7 @@ class JobsList::AdminController < ModuleController
 
   public
 
-  def self.get_jobs_list_info
+  def self.get_jobs_lists_info
     info = JobsList::JobsListJobsList.find(:all, :order => 'name', :conditions => { :is_user_jobs_list => false }).collect do |jobs_list|
       {:name => jobs_list.name,:url => { :controller => '/jobs_list/manage', :path => jobs_list.id } ,:permission => { :model => jobs_list, :permission =>  :edit_permission, :base => :jobs_list_writer  }, :icon => 'icons/content/model.gif' }
     end
