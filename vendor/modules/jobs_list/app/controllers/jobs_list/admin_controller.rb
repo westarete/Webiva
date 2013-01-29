@@ -29,11 +29,11 @@ class JobsList::AdminController < ModuleController
 
   def self.get_jobs_list_info
     info = JobsList::JobsListJobsList.find(:all, :order => 'name', :conditions => { :is_user_jobs_list => false }).collect do |jobs_list|
-      {:name => jobs_list.name,:url => { :controller => '/jobs_list/manage', :path => jobs_list.id } ,:permission => { :model => jobs_list, :permission =>  :edit_permission, :base => :jobs_list_writer  }, :icon => 'icons/content/jobs_lists_icon.png' }
+      {:name => jobs_list.name,:url => { :controller => '/jobs_list/manage', :path => jobs_list.id } ,:permission => { :model => jobs_list, :permission =>  :edit_permission, :base => :jobs_list_writer  }, :icon => 'icons/content/model.gif' }
     end
     @user_jobs_lists = JobsList::JobsListJobsList.count(:all,:conditions => {:is_user_jobs_list => true })
     if @user_jobs_lists > 0
-      info << { :name => 'Site Jobs Lists', :url => { :controller => '/jobs_list/manage', :action => 'list' },:permission => 'jobs_list_user_jobs_lists', :icon => 'icons/content/jobs_lists_icon.png' }
+      info << { :name => 'Site Jobs Lists', :url => { :controller => '/jobs_list/manage', :action => 'list' },:permission => 'jobs_list_user_jobs_lists', :icon => 'icons/content/model.gif' }
     end
     info
   end
