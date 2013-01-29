@@ -12,7 +12,7 @@ class JobsList::AddJobsListWizard < WizardModel
 
   attributes :jobs_list_id => nil,
   :add_to_id=>nil,
-  :add_to_subpage => 'jobs list',
+  :add_to_subpage => 'jobs_list',
   :add_to_existing => nil,
   :opts => [],
   :number_of_dummy_posts => 3
