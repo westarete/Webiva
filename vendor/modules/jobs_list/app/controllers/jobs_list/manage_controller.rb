@@ -8,7 +8,7 @@ class JobsList::ManageController < ModuleController
 
   before_filter :check_view_permission, :except => [ :configure, :delete, :display_jobs_list_list_table, :list, :generate_mail, :generate_mail_generate, :display_generate_post_table, :import ]
 
-  component_info 'Jobs List'
+  component_info 'JobsList'
   
   cms_admin_paths 'content', 
                   'Content' => { :controller => '/content' },
