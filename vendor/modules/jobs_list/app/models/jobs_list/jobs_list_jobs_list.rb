@@ -185,8 +185,8 @@ class JobsList::JobsListJobsList < DomainModel
 
   def before_validation_on_create
     if self.is_user_jobs_list?
-      self.content_filter = 'safe_html' if self.is_user_jobs_listf?
-      self.jobs_listf_target_id = JobsList::JobsListTarget.fetch_for_target(self.target)
+      self.content_filter = 'safe_html' if self.is_user_jobs_list?
+      self.jobs_list_target_id = JobsList::JobsListTarget.fetch_for_target(self.target)
     end
   end
 
@@ -196,21 +196,21 @@ class JobsList::JobsListJobsList < DomainModel
   end
 
   def content_detail_link_url(path,obj)
-    if self.jobs_listf_options.category_override
+    if self.jobs_list_options.category_override
       "#{path}/#{obj.first_category.permalink}/#{obj.permalink}"
     else 
       "#{path}/#{obj.permalink}"
     end
   end
 
-  def jobs_listf_options(val=nil)
+  def jobs_list_options(val=nil)
     @options_cache = nil if val
     @options_cache ||= JobsListOptions.new(val || self.options_data)
     @options_cache
   end
 
-  def jobs_listf_options=(val)
-    self.options_data = jobs_listf_options(val).to_hash
+  def jobs_list_options=(val)
+    self.options_data = jobs_list_options(val).to_hash
   end
 
   class JobsListOptions < HashModel
@@ -228,10 +228,10 @@ class JobsList::JobsListJobsList < DomainModel
        args = {}
        @@import_fields.each_with_index { |fld,idx| args[fld] = row[idx] }
 
-       post = self.jobs_listf_posts.find_by_permalink(args[:permalink]) if !args[:permalink].blank?
+       post = self.jobs_list_posts.find_by_permalink(args[:permalink]) if !args[:permalink].blank?
 
        args[:author] = user.name if args[:author].blank?
-       post ||= self.jobs_listf_posts.build
+       post ||= self.jobs_list_posts.build
 
        post.attributes = args
        post.publish(args[:published_at])  if !args[:published_at].blank?
