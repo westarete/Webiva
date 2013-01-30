@@ -82,11 +82,7 @@
     <%= f.editor_area :body, :vertical => true, :required => true, :rows => 35, :style=>'width:100%', :content_filter => @blog.content_filter %>
 
     <%= f.header "Additional Fields" %>
-    <%= f.text_field :preview_title, :vertical => true, :size => 80, :label => 'Preview Title (Optional)' %>
     <%= f.editor_area :preview, :vertical => true, :rows => 12, :label => 'Preview (Optional)', :style=>'width:100%', :content_filter => @blog.content_filter %>
-    <%= f.text_field :keywords, :vertical => true, :style=>'width:100%' %>
-    <%= f.filemanager_file :media_file_id, :vertical => true, :label => 'Local Media (.mp3 or .flv file)' %>
-    <%= f.text_field :embedded_media, :vertical => true, :label => 'Embedded Media (Paste entire <object ...> block)', :style => 'width:100%' %>
     <%= f.yes_no :disallow_comments, :vertical => true, :description => 'requires page connection to be set' %>
 
     <% if @blog.content_model -%>
@@ -98,7 +94,7 @@
       <% end -%>
     <% end -%>
 
-    <%= f.submit_tag @entry.id ? 'Update Entry' : 'Create Entry' %>
+    <%= f.submit_tag @entry.id ? 'Update Entry' : 'Create Entry', :style=>'margin-top: 20px' %>
   </table>
   </td>
   <td nowrap='1' width='200' valign='top' style='padding-left:20px;'>
@@ -107,15 +103,14 @@
       Categories
     </div>
     <div class='sidebar_group'>
-      <input type='text' name='new_category' id='new_category' onkeypress='if(SCMS.isEnter(event)) { PostEditor.createCategory(); return false; } else { return true; }' size='15'><input type='button' value='New' onclick='PostEditor.createCategory();' />
-      <hr/>
+      <input type='text' name='new_category' id='new_category' onkeypress='if(SCMS.isEnter(event)) { PostEditor.createCategory(); return false; } else { return true; }' size='15'><input type='button' value='New' style='margin-left: 10px;' onclick='PostEditor.createCategory();' />
     <div id='post_categories'>
         <% @categories.each do |category| -%>
 <label for='category_<%= category.id %>'><input type='checkbox' id='category_<%= category.id %>' name='categories[]' value='<%= category.id %>' <%= 'checked="checked"' if @selected_category_ids.include?(category.id)  %> /><%= h category.name %></label><br/>
        <% end -%>
     </div>
    </div>
-
+    <hr/>
     <div class='sidebar_header'>
         Tags
     </div>
@@ -124,7 +119,7 @@
       <button onclick='PostEditor.selectTags(); return false;'>Select Tags</button>
 
     </div>
-    
+    <hr/>
     <div class='sidebar_header'>
         Publication Status
     </div>
@@ -138,9 +133,9 @@
     <% end -%>
       <%= f.datetime_field :published_at, :label => '',:unstyled => true, :blank => true, :disabled => !(@entry.status == 'published' && ( !@entry.published_at  || @entry.published_at > Time.now ) ) %>
     </div>
-    <div align='center'>
+    <div align='right'>
       <table>
-        <%= f.submit_tag @entry.id ? 'Update Entry' : 'Create Entry',:unstyled => true %>
+        <%= f.submit_tag @entry.id ? 'Update Entry' : 'Create Entry',:unstyled => true, :style=>'margin-top: 20px' %>
       </table>
     </div>
   </td>
