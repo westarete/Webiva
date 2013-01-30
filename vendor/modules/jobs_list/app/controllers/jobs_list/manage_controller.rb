@@ -4,9 +4,9 @@ class JobsList::ManageController < ModuleController
   
   permit 'jobs_list_writer', :except => [ :configure]
 
-  permit 'jobs_list_config', :only => [ :configure, :delete, :import ]
+  permit 'jobs_list_config', :only => [ :configure, :delete ]
 
-  before_filter :check_view_permission, :except => [ :configure, :delete, :display_jobs_list_list_table, :list, :generate_mail, :generate_mail_generate, :display_generate_post_table, :import ]
+  before_filter :check_view_permission, :except => [ :configure, :delete, :display_jobs_list_list_table, :list, :generate_mail, :generate_mail_generate, :display_generate_post_table ]
 
   component_info 'JobsList'
   
@@ -227,88 +227,7 @@ class JobsList::ManageController < ModuleController
     display_jobs_list_list_table(false)
   end
 
-  def import
-    @jobs_list = JobsList::JobsListJobsList.find(params[:path][0])
-    jobs_list_path(@jobs_list,"Import Jobs List")
-
-    @import = ImportOptions.new params[:import]
-    @import.wordpress_import_settings = ['pages'] unless params[:import]
-
-    if request.post? && @import.valid?
-      if params[:commit]
-        if @import.import @jobs_list, myself
-          redirect_to :action => 'index', :path => [ @jobs_list.id ]
-        end
-      else
-        redirect_to :action => 'index', :path => [ @jobs_list.id ]
-      end
-    end
-  end
-
   protected
-  
-  class ImportOptions < HashModel
-    attributes :import_file_id => nil, :wordpress_export_file_id => nil, :wordpress_url => nil, :wordpress_username => nil, :wordpress_password => nil, :wordpress_import_settings => [], :rss_url => nil
-
-    domain_file_options :import_file_id, :wordpress_export_file_id
-
-    def validate
-      if self.import_file_id.blank? && self.wordpress_export_file_id.blank? && self.wordpress_url.blank? && self.rss_url.blank?
-        self.errors.add_to_base 'Import settings not specified'
-      elsif ! self.rss_url.blank?
-        self.errors.add(:rss_url, 'is invalid') unless URI::regexp(%w(http https)).match(self.rss_url)
-      elsif self.import_file_id.blank? && self.wordpress_export_file_id.blank? && ! self.wordpress_url.blank?
-        self.errors.add(:wordpress_url, 'is invalid') unless URI::regexp(%w(http https)).match(self.wordpress_url)
-        self.errors.add(:wordpress_username, 'is missing') if self.wordpress_username.blank?
-        self.errors.add(:wordpress_password, 'is missing') if self.wordpress_password.blank?
-      end
-    end
-
-    def wordpress_importer
-      return @wordpress_importer if @wordpress_importer
-      @wordpress_importer = JobsList::WordpressImporter.new
-      @wordpress_importer.import_pages = self.wordpress_import_settings.include?('pages')
-      @wordpress_importer
-    end
-
-    def rss_importer
-      @rss_importer ||= JobsList::RssImporter.new
-    end
-
-    def import(jobs_list, user)
-      if self.import_file
-        jobs_list.import_file(self.import_file, user)
-      elsif ! self.rss_url.blank?
-        self.rss_importer.jobs_list = jobs_list
-        if self.rss_importer.import_feed(self.rss_url) 
-          self.errors.add(:rss_url, 'failed to import feed') unless self.rss_importer.import
-        else
-          self.errors.add(:rss_url, 'is invalid')
-        end
-      elsif self.wordpress_export_file
-        self.wordpress_importer.jobs_list = jobs_list
-        self.wordpress_importer.import_file(self.wordpress_export_file)
-        self.errors.add(:wordpress_export_file_id, self.wordpress_importer.error) unless self.wordpress_importer.import
-      elsif ! self.wordpress_url.blank?
-        self.wordpress_importer.jobs_list = jobs_list
-        unless self.wordpress_importer.import_site(self.wordpress_url, self.wordpress_username, self.wordpress_password)
-          if self.wordpress_importer.error == 'Login failed'
-            self.errors.add(:wordpress_username, 'is invalid')
-            self.errors.add(:wordpress_password, 'is invalid')
-          else
-            self.errors.add(:wordpress_url, 'is invalid')
-            self.errors.add_to_base(self.wordpress_importer.error)
-          end
-        end
-
-        unless self.wordpress_importer.error
-          self.errors.add_to_base(self.wordpress_importer.error) unless self.wordpress_importer.import
-        end
-      end
-
-      self.errors.length > 0 ? false : true
-    end
-  end
 
   def jobs_list_path(jobs_list,path=nil)
     base = ['Content']
@@ -320,7 +239,6 @@ class JobsList::ManageController < ModuleController
     end 
   end
 
-
   def check_view_permission
     @jobs_list ||= JobsList::JobsListJobsList.find(params[:path][0])
 
@@ -331,7 +249,5 @@ class JobsList::ManageController < ModuleController
       end
     end
   end
-
-
 
 end

@@ -213,25 +213,4 @@ class JobsList::JobsListJobsList < DomainModel
     boolean_options :category_override
   end
 
-  @@import_fields  = %w(title permalink job_status published_at body).map(&:to_sym)
-
-  def import_file(domain_file,user)
-     filename = domain_file.filename
-     reader = CSV.open(filename,"r",',')
-     file_fields = reader.shift
-     reader.each do |row|
-       args = {}
-       @@import_fields.each_with_index { |fld,idx| args[fld] = row[idx] }
-
-       post = self.jobs_list_posts.find_by_permalink(args[:permalink]) if !args[:permalink].blank?
-
-       args[:job_status] = user.name if args[:job_status].blank?
-       post ||= self.jobs_list_posts.build
-
-       post.attributes = args
-       post.publish(args[:published_at])  if !args[:published_at].blank?
-       post.save
-     end
-  end
-
 end

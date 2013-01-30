@@ -18,7 +18,6 @@ var PostEditor = {
 <% more_action_panel do |p| -%>
   <%= p.link "Jobs List Categories",  :controller => 'categories', :path => @jobs_list.id, :icon => 'edit.gif' %>
   <%= p.link "Configure Jobs List", :action => 'configure', :path => @jobs_list.id, :icon => 'configure.gif' if myself.has_role?('jobs_list_config') %>
-  <%= p.link "Import Entries", :action => "import", :path => @jobs_list.id, :icon => "upload.gif" if myself.has_role?('jobs_list_config') %>
   <%= p.link "Delete Jobs List",  :action => 'delete', :path => @jobs_list.id, :icon =>'delete.gif',:right => true if myself.has_role?('jobs_list_config') %>
 <% end -%>
 
