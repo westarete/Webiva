@@ -259,6 +259,8 @@ form td.label_vertical {
  color:#3b648c;
  font-weight:bold;
  padding-right:15px;
+ vertical-align: bottom;
+ height: 25px;
 }
 
 
@@ -275,6 +277,12 @@ form .fieldWithErrors textarea { border:1px solid red; }
 
 form input:focus, form textarea:focus  {
  background-color: #e6f3ff;
+}
+
+.sidebar_header {
+    padding-top: 6px;
+    color: #3B648C;
+    font-weight: bold;
 }
 
 /*form input[type=submit], form input[type=button] {
