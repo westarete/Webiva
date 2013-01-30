@@ -20,7 +20,7 @@ class JobsList::ManageController < ModuleController
                 JobsList::JobsListPost,
                 [ hdr(:icon, '', :width=>10),
                   hdr(:string, 'jobs_list_post_revisions.title', :label => 'Job Title'),
-                  hdr(:options, 'jobs_list_posts.status', :label => 'Status', :options => JobsList::JobsListPost.status_select_options ),
+                  hdr(:options, 'jobs_list_posts.status', :label => 'Publication Status', :options => JobsList::JobsListPost.status_select_options ),
                   :published_at,
                   :permalink,
                   :updated_at,
