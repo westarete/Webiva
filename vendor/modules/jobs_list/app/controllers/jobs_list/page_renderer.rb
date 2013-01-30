@@ -133,14 +133,12 @@ class JobsList::PageRenderer < ParagraphRenderer
                                                  :jobs_list => jobs_list)
       cache[:title] = entry ? entry.title : ''
       cache[:entry_id] = entry ? entry.id : nil
-      cache[:comments_ok] = false
     end
 
     if result.entry_id
       set_page_connection(:content_id, ['JobsList::JobsListPost',result.entry_id] )
       set_page_connection(:content_node_id, result.content_node_id )
       set_page_connection(:post, result.entry_id )
-      set_page_connection(:comments_ok, result.comments_ok)
       set_title(result.title)
       set_content_node(result.content_node_id)
     else

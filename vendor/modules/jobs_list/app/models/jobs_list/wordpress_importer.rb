@@ -1,7 +1,7 @@
 require 'nokogiri'
 
 class JobsList::WordpressImporter
-  attr_accessor :xml, :jobs_list, :images, :folder, :error, :import_comments, :import_pages
+  attr_accessor :xml, :jobs_list, :images, :folder, :error, :import_pages
 
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::TextHelper
@@ -9,7 +9,6 @@ class JobsList::WordpressImporter
   def initialize
     self.images = {}
     self.import_pages = true
-    self.import_comments = true
   end
 
   def folder
@@ -170,14 +169,6 @@ class JobsList::WordpressImporter
       JobsList::JobsListPostsCategory.create :jobs_list_post_id => post.id, :jobs_list_category_id => categories[cat].id
     end
 
-    comments = item['comment']
-    if comments
-      comments = [comments] unless comments.is_a?(Array)
-      comments.each do |comment|
-        self.create_comment post, comment
-      end
-    end
-
     if item['tag']
       tags = item['tag']
       tags = [tags] unless tags.is_a?(Array)
@@ -185,21 +176,6 @@ class JobsList::WordpressImporter
     end
 
     post
-  end
-
-  def create_comment(post, comment)
-    return unless self.import_comments
-    return if comment['comment_content'].blank?
-    user = comment['comment_job_status_email'].blank? ? nil : EndUser.push_target(comment['comment_job_status_email'], :name => comment['comment_job_status'])
-    rating = comment['comment_approved'] == "1" ? 1 : 0
-
-    posted_at = Time.now
-    begin
-      posted_at = Time.parse(comment['comment_date'])
-    rescue
-    end
-
-    Comment.create :target => post, :end_user_id => user ? user.id : nil, :posted_at => posted_at, :posted_ip => comment['comment_job_status_IP'], :name => comment['comment_job_status'], :email => comment['comment_job_status_email'], :comment => comment['comment_content'], :rating => rating, :website => comment['comment_job_status_url']
   end
 
   def create_page(item)
@@ -229,14 +205,6 @@ class JobsList::WordpressImporter
       # Basic Paragraph
       rv.push_paragraph(nil, 'html') do |para|
         para.display_body = self.parse_body(body)
-      end
-
-      comments = item['comment']
-      if comments
-        comments = [comments] unless comments.is_a?(Array)
-        comments.each do |comment|
-          self.create_comment nd, comment
-        end
       end
     end
   end

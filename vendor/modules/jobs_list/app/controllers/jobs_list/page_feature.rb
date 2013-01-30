@@ -12,7 +12,7 @@ class JobsList::PageFeature < ParagraphFeature
           <cms:body/>
           <cms:detail_link>Read More...</cms:detail_link><br/><br/>
           <div class='jobs_list_info'>
-             Posted <cms:published_at /> by <cms:job_status/> | <cms:detail_link>User Comments (<cms:comment_count/>)</cms:detail_link><br/><br/>
+             Posted <cms:published_at /> by <cms:job_status/><br/><br/>
              <cms:categories> Categories: <cms:value/> <cms:tags> | </cms:tags> </cms:categories> 
              <cms:tags> Tags: <cms:value/> </cms:tags>
           </div>
@@ -95,10 +95,6 @@ class JobsList::PageFeature < ParagraphFeature
     c.value_tag('entry:rating_display') { |t| sprintf("%.1f",t.locals.entry.rating) }
     
     c.date_tag('entry:published_at',"%H:%M%p on %B %d %Y".t) { |t|  t.locals.entry.published_at }
-    c.expansion_tag('entry:comments') { |t| t.locals.entry.comments_count > 0 }
-    c.value_tag('entry:comment_count') { |t| t.locals.entry.comments_count }
-    c.value_tag('entry:approved_comment_count') { |t| t.locals.entry.approved_comments_count }
-    
     
     %w(title job_status).each do |elem|
       c.value_tag('entry:' + elem) { |tag| h(tag.locals.entry.send(elem)) }

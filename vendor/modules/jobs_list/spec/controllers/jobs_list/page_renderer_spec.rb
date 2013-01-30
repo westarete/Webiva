@@ -94,7 +94,6 @@ describe JobsList::PageRenderer, :type => :controller do
     JobsList::JobsListJobsList.should_receive(:find_by_id).with(@jobs_list.id).and_return(@jobs_list)
     @jobs_list.should_receive(:find_post_by_permalink).with(@post.permalink).and_return(@post)
 
-    @rnd.should_receive(:set_page_connection).with(:comments_ok, true)
     @rnd.should_receive(:set_page_connection).with(:content_id, ['JobsList::JobsListPost',@post.id])
     @rnd.should_receive(:set_page_connection).with(:post, @post.id)
 

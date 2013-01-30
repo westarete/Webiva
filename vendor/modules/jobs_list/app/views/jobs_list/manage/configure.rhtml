@@ -7,7 +7,6 @@
 <%= f.filemanager_folder :folder_id %>
 <%= f.text_field :html_class, :description => 'HTML Class to wrap jobs list posts in WYSIWYG Editor (optional)' %>
   <%= f.access_control :edit_permission, 'Limit which admins can edit this jobs list',  :description => 'User must also have Jobs List Writer permission' %>
-<%= f.check_boxes :trackback, [['Send pingbacks when a post is published.', true]], :label => 'Pingbacks', :single => true %>
 <%= f.select :content_model_id, ContentModel.select_options_with_nil %>
 <%= f.select :content_publication_id, @jobs_list.content_model ? @jobs_list.content_model.content_publications.select_options_with_nil : [["--Select %s--" / 'Content publication', nil]] %>
 <% cms_subfields_for "jobs_list[jobs_list_options]", @jobs_list.jobs_list_options do |sf| %>

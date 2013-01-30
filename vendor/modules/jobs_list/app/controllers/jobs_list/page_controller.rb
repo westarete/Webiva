@@ -20,7 +20,6 @@ class JobsList::PageController < ParagraphController
                                     :jobs_list => [[:jobs_list_id,'Jobs List ID',:path ]]
                                   },
                        :outputs => [[:content_id, 'Content Identifier', :content],
-                                    [:comments_ok, 'Allow Commenting', :boolean ],
                                     [:content_node_id, 'Content Node', :content_node_id ],
                                     [:post, 'Jobs List Post', :post_id ]]
                                   

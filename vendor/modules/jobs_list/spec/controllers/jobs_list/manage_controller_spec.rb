@@ -98,7 +98,6 @@ describe JobsList::ManageController do
 
   it "should be able to create a post and publish it" do
     JobsList::JobsListJobsList.should_receive(:find).any_number_of_times.and_return(@jobs_list)
-    @jobs_list.should_receive(:send_pingbacks)
 
     assert_difference 'JobsList::JobsListPost.count', 1 do
       post 'post', :path => [@jobs_list.id], :entry => {:title => 'New Jobs List Title', :body => 'New Jobs List Body'}, :update_entry => {:status => 'publish_now'}
@@ -113,7 +112,6 @@ describe JobsList::ManageController do
 
   it "should be able to create a post and publish it" do
     JobsList::JobsListJobsList.should_receive(:find).any_number_of_times.and_return(@jobs_list)
-    @jobs_list.should_receive(:send_pingbacks)
 
     published_at = 1.hour.ago
 

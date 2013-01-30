@@ -190,11 +190,6 @@ class JobsList::JobsListJobsList < DomainModel
     end
   end
 
-  def send_pingbacks(post)
-    return unless self.trackback? && post.published?
-    post.run_pingbacks(post.active_revision.body_html)
-  end
-
   def content_detail_link_url(path,obj)
     if self.jobs_list_options.category_override
       "#{path}/#{obj.first_category.permalink}/#{obj.permalink}"

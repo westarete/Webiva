@@ -5,9 +5,7 @@ class JobsList::AdminController < ModuleController
 
   component_info('JobsList',
                  :description => 'Add Jobs List Content Feature',
-                 :access => :public,
-                 :dependencies => [ 'feedback'] )
-
+                 :access => :public )
 
   content_model :jobs_lists
 

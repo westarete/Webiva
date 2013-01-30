@@ -29,8 +29,7 @@ class JobsList::AddJobsListWizard < WizardModel
                fld(:jobs_list_id, :select, :options => :jobs_list_select_options, :label => 'Jobs List to Add'),
                fld(:add_to, :add_page_selector),
                fld(:opts, :check_boxes,
-                   :options => [['Add a comments paragraph','comments'],
-                                ['Add Categories to list page','categories']],
+                   :options => [['Add Categories to list page','categories']],
                    :label => 'Options', :separator => '<br/>'
                    ),
                fld(:number_of_dummy_posts, :text_field, :description => 'Number of dummy posts to create if jobs list has no posts', :label => 'Dummy posts')
@@ -79,18 +78,6 @@ class JobsList::AddJobsListWizard < WizardModel
 
       detail_para = rv.push_paragraph '/jobs_list/page', 'entry_detail', {:list_page_id => base_node.id, :jobs_list_id => self.jobs_list_id} do |para|
         para.add_page_input(:input, :page_arg_0, :post_permalink)
-      end
-
-      if self.opts.include?('comments')
-        rv.push_paragraph('/feedback/comments', 'comments',
-                          { :show => -1,
-                            :allowed_to_post => 'all',
-                            :linked_to_type => 'connection',
-                            :captcha => false,
-                            :order => 'newest'
-                          }) do | para|
-          para.add_paragraph_input!(:input,detail_para,:content_id,:content_identifier)
-        end
       end
 
       if self.opts.include?('categories')

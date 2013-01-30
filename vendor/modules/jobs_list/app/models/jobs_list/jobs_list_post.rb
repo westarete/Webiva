@@ -21,10 +21,6 @@ class JobsList::JobsListPost < DomainModel
    
   has_options :status, [ [ 'Draft','draft'], ['Published','published']]
 
-  has_many :comments, :as => :target
-
-  include Feedback::PingbackSupport
-
   cached_content :update => :jobs_list_jobs_list, :identifier => :permalink
   # Add cached content support, but make sure we update the jobs list cache element
   
@@ -91,16 +87,6 @@ class JobsList::JobsListPost < DomainModel
 
   def jobs_list_target_id
     self.jobs_list_jobs_list.jobs_list_target_id
-  end
-
-  def comments_count
-    return @comments_count if @comments_count
-    @comments_count = self.comments.size
-    return @comments_count 
-  end
-
-  def approved_comments_count
-    @approved_comments_count ||= self.comments.with_rating(1).count
   end
 
   def self.paginate_published(page,items_per_page,jobs_list_ids = [],options = {})
@@ -198,13 +184,6 @@ class JobsList::JobsListPost < DomainModel
   end
 
   include ActionView::Helpers::TextHelper
-
-  def self.comment_posted(jobs_list_id)
-     
-    DataCache.expire_content("Jobs List")
-    DataCache.expire_content("Jobs List Post")
-  end
-
 
   def before_save
     if self.data_model

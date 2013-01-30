@@ -14,7 +14,7 @@
   <%= f.text_field :wordpress_url, :label => 'URL', :size => 40, :description => "The home page of your word press jobs list.\n Example: http://<jobs list's name>.wordpress.com/" %>
   <%= f.text_field :wordpress_username, :label => 'Username', :size => 15 %>
   <%= f.password_field :wordpress_password, :label => 'Password', :size => 15 %>
-  <%= f.check_boxes :wordpress_import_settings, [['Import comments', 'comments'], ['Import pages', 'pages']], :label => 'Import settings' %>
+  <%= f.check_boxes :wordpress_import_settings, [['Import pages', 'pages']], :label => 'Import settings' %>
 
   <%= f.spacer %>
   <%= f.cancel_submit_buttons "Cancel","Submit" %>

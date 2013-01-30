@@ -150,7 +150,6 @@ class JobsList::ManageController < ModuleController
     
         if @entry.save
           @entry.set_categories!(params[:categories])
-          @jobs_list.send_pingbacks(@entry)
 
           redirect_to :action => 'index', :path => @jobs_list.id
           return 
@@ -233,7 +232,7 @@ class JobsList::ManageController < ModuleController
     jobs_list_path(@jobs_list,"Import Jobs List")
 
     @import = ImportOptions.new params[:import]
-    @import.wordpress_import_settings = ['comments', 'pages'] unless params[:import]
+    @import.wordpress_import_settings = ['pages'] unless params[:import]
 
     if request.post? && @import.valid?
       if params[:commit]
@@ -268,7 +267,6 @@ class JobsList::ManageController < ModuleController
     def wordpress_importer
       return @wordpress_importer if @wordpress_importer
       @wordpress_importer = JobsList::WordpressImporter.new
-      @wordpress_importer.import_comments = self.wordpress_import_settings.include?('comment')
       @wordpress_importer.import_pages = self.wordpress_import_settings.include?('pages')
       @wordpress_importer
     end
