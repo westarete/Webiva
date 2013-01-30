@@ -4,7 +4,6 @@
 <%= f.text_field :name %>
 <%= f.select :site_template_id, @site_templates %>
 <%= f.select :content_filter, JobsList::JobsListJobsList.filter_options, :description => 'Only the Full HTML filter uses WYSIWYG Editor' %>
-<%= f.filemanager_folder :folder_id %>
 <%= f.text_field :html_class, :description => 'HTML Class to wrap jobs list posts in WYSIWYG Editor (optional)' %>
   <%= f.access_control :edit_permission, 'Limit which admins can edit this jobs list',  :description => 'User must also have Jobs List Writer permission' %>
 <%= f.select :content_model_id, ContentModel.select_options_with_nil %>

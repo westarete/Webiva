@@ -10,9 +10,7 @@ class JobsList::JobsListPostRevision < DomainModel
 
   
   apply_content_filter(:body => :body_html)  do |revision|
-    { :filter => revision.jobs_list_jobs_list.content_filter,
-      :folder_id => revision.jobs_list_jobs_list.folder_id
-    }
+    { :filter => revision.jobs_list_jobs_list.content_filter }
   end
 
   attr_writer :jobs_list_jobs_list
