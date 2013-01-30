@@ -14,7 +14,7 @@ describe JobsList::JobsListPost do
   
   it "should create a content_node after create" do
     @jobs_list.should be_valid
-    post = JobsList::JobsListPost.new(:jobs_list_jobs_list_id => @jobs_list.id, :title => 'Test Post', :body => 'Testerama',:author => 'Anonymous')
+    post = JobsList::JobsListPost.new(:jobs_list_jobs_list_id => @jobs_list.id, :title => 'Test Post', :body => 'Testerama',:job_status => 'Anonymous')
     
     post.should be_valid
     

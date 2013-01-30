@@ -29,9 +29,9 @@ class JobsList::MultipleRssHandler
       item = { :title => post.title,
                :guid => post.id,
                :published_at => post.published_at.to_s(:rfc822),
-               :description => Util::HtmlReplacer.replace_relative_urls(@options.full ? post.body_content : post.preview)
+               :description => Util::HtmlReplacer.replace_relative_urls(post.body_content)
              }
-      item[:creator] = post.author unless post.author.blank?
+      item[:creator] = post.job_status unless post.job_status.blank?
       post.jobs_list_categories.each do |cat|
         item[:categories] ||= []
         item[:categories] << cat.name

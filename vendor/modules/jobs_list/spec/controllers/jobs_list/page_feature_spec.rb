@@ -56,12 +56,4 @@ describe JobsList::PageFeature, :type => :view do
     @output.should include( @post.title )
   end
 
-  it "should render a preview paragraph" do
-    @post.preview = 'Preview Test'
-
-    @output = @feature.jobs_list_post_preview_feature(:entry => @post
-						 )
-
-    @output.should include( 'Preview Test' )
-  end
 end

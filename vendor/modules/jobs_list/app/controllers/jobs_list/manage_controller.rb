@@ -138,15 +138,12 @@ class JobsList::ManageController < ModuleController
      end
      @selected_category_ids = params[:categories] || @entry.category_ids
 
-     @entry.author = myself.name if @entry.author.blank?
-
      if request.post? && params[:entry]
         @entry.attributes = params[:entry]
 
         case params[:update_entry][:status]
         when 'draft':       @entry.make_draft
         when 'publish_now': @entry.publish_now
-        when 'preview':     @entry.make_preview
         when 'post_date'
           @entry.publish(params[:entry][:published_at].blank? ? Time.now : (params[:entry][:published_at]))
         end

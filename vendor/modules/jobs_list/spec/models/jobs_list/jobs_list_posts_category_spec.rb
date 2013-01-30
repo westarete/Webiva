@@ -7,7 +7,7 @@ describe JobsList::JobsListPostsCategory do
   it "should be able to set jobs list post categories" do
     @jobs_list = JobsList::JobsListJobsList.create :name => 'Test Jobs List', :content_filter => 'full_html'
     @category = @jobs_list.jobs_list_categories.create :name => 'Test Category'
-    @post = @jobs_list.jobs_list_posts.new :title => 'Test Post', :body => 'Testerama',:author => 'Anonymous'
+    @post = @jobs_list.jobs_list_posts.new :title => 'Test Post', :body => 'Testerama',:job_status => 'Anonymous'
     @post.save
 
     assert_difference 'JobsList::JobsListPostsCategory.count', 1 do

@@ -14,7 +14,7 @@
   <td align='left' nowrap='1'><%= entry_checkbox "post", t.id %></td>
   <td><a href='<%= url_for :action => 'post', :path => [ @jobs_list.id, t.id ] %>'><%= h t.active_revision.title %></a></td>
   <td >
-    <% if (t.status == 'published' || t.status == 'preview') && t.content_node_link %>
+    <% if (t.status == 'published') && t.content_node_link %>
       <%= link_to theme_icon("table","icons/table_actions/preview.gif"), t.content_node_link %>
     <% end -%>
     <%= t.status_display %><%= " (Post Dated)" if t.published_at && t.published_at > current_time %>

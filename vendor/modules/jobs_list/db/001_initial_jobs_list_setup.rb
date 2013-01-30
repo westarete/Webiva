@@ -12,18 +12,13 @@ class InitialJobsListSetup < ActiveRecord::Migration
     create_table :jobs_list_post_revisions, :force => true do |t|
       t.column :jobs_list_post_id, :integer
       t.column :title, :string
-      t.column :domain_file_id, :integer
       t.column :status, :string, :default => 'active'
-      t.column :keywords, :string
-      t.column :preview, :text , :limit => 2.megabytes
-      t.column :preview_html, :text, :limit => 2.megabytes
       t.column :body, :text , :limit => 2.megabytes
 
       t.column :body_html, :text , :limit => 2.megabytes
-      t.column :author, :string
+      t.column :job_status, :string, :default => 'Active'
       t.column :created_at, :datetime
       t.column :updated_at, :datetime
-      t.column :end_user_id, :integer
     end
   
 
@@ -34,7 +29,6 @@ class InitialJobsListSetup < ActiveRecord::Migration
       t.column :jobs_list_post_revision_id, :integer
       t.column :permalink, :string
       t.column :status, :string, :default => 'draft'
-      t.column :disallow_comments, :boolean, :default => false
       t.column :created_at, :datetime
       t.column :updated_at, :datetime
       t.column :published_at, :datetime

@@ -75,23 +75,23 @@ class JobsList::RssImporter
   def create_post(item)
     title = item.css('title').text
     body = item.css('description').text
-    author = item.css('dc:creator').text
-    author = item.css('creator').text if author.blank?
-    author = item.css('author').text if author.blank?
+    job_status = item.css('dc:creator').text
+    job_status = item.css('creator').text if job_status.blank?
+    job_status = item.css('job_status').text if job_status.blank?
 
     pubDate = item.css('pubDate').text
     pubDate = nil if pubDate.blank?
     pubDate = pubDate ? Time.parse(pubDate) : Time.now
     return if body.blank? || title.blank?
 
-    if author
-      author.gsub! /[^\s]+@[^\s]+/, '' # remove the email address
-      author.gsub! /[^ a-zA-Z0-9\-]/, '' # remove any non name characters
-      author.strip!
-      author = nil if author.blank?
+    if job_status
+      job_status.gsub! /[^\s]+@[^\s]+/, '' # remove the email address
+      job_status.gsub! /[^ a-zA-Z0-9\-]/, '' # remove any non name characters
+      job_status.strip!
+      job_status = nil if job_status.blank?
     end
 
-    post = self.jobs_list.jobs_list_posts.create :body => self.parse_body(body), :author => author, :title => title, :status => 'published', :published_at => pubDate, :disallow_comments => false, :created_at => pubDate, :updated_at => pubDate
+    post = self.jobs_list.jobs_list_posts.create :body => self.parse_body(body), :job_status => job_status, :title => title, :status => 'published', :published_at => pubDate, :created_at => pubDate, :updated_at => pubDate
 
     return unless post.id
 

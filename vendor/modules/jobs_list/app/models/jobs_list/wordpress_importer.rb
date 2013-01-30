@@ -147,7 +147,6 @@ class JobsList::WordpressImporter
     return if self.jobs_list.jobs_list_posts.find_by_permalink item['post_name']
 
     status = item['status'] == 'publish' ? 'published' : 'draft'
-    disallow_comments = item['comment_status'] == 'open' ? false : true
     published_at = Time.now
     begin
       published_at = Time.parse(item['pubDate'])
@@ -160,7 +159,7 @@ class JobsList::WordpressImporter
     rescue
     end
 
-    post = self.jobs_list.jobs_list_posts.create :body => self.parse_body(body), :author => item['creator'], :title => item['title'], :published_at => published_at, :status => status, :disallow_comments => disallow_comments, :permalink => item['post_name'], :created_at => posted_at, :preview => self.parse_body(item['excerpt'])
+    post = self.jobs_list.jobs_list_posts.create :body => self.parse_body(body), :job_status => item['creator'], :title => item['title'], :published_at => published_at, :status => status, :permalink => item['post_name'], :created_at => posted_at
 
     return unless post.id
 
@@ -191,7 +190,7 @@ class JobsList::WordpressImporter
   def create_comment(post, comment)
     return unless self.import_comments
     return if comment['comment_content'].blank?
-    user = comment['comment_author_email'].blank? ? nil : EndUser.push_target(comment['comment_author_email'], :name => comment['comment_author'])
+    user = comment['comment_job_status_email'].blank? ? nil : EndUser.push_target(comment['comment_job_status_email'], :name => comment['comment_job_status'])
     rating = comment['comment_approved'] == "1" ? 1 : 0
 
     posted_at = Time.now
@@ -200,7 +199,7 @@ class JobsList::WordpressImporter
     rescue
     end
 
-    Comment.create :target => post, :end_user_id => user ? user.id : nil, :posted_at => posted_at, :posted_ip => comment['comment_author_IP'], :name => comment['comment_author'], :email => comment['comment_author_email'], :comment => comment['comment_content'], :rating => rating, :website => comment['comment_author_url']
+    Comment.create :target => post, :end_user_id => user ? user.id : nil, :posted_at => posted_at, :posted_ip => comment['comment_job_status_IP'], :name => comment['comment_job_status'], :email => comment['comment_job_status_email'], :comment => comment['comment_content'], :rating => rating, :website => comment['comment_job_status_url']
   end
 
   def create_page(item)

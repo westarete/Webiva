@@ -5,7 +5,7 @@ class JobsList::CategoriesController < ModuleController
   
   permit 'jobs_list_writer'
 
-  component_info 'Jobs List'
+  component_info 'JobsList'
 
   # need to include 
    include ActiveTable::Controller   

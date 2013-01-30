@@ -118,15 +118,15 @@ class JobsList::JobsListJobsList < DomainModel
 
   end
 
-  def paginate_posts_by_author(page,author,items_per_page,options={})
+  def paginate_posts_by_job_status(page,job_status,items_per_page,options={})
     JobsList::JobsListPost.paginate(page, {
           :include => [ :active_revision, :jobs_list_categories ],
           :order => 'published_at DESC',
           :conditions => ["jobs_list_posts.status = \"published\" AND
                            jobs_list_posts.published_at < ? AND
                            jobs_list_posts.jobs_list_jobs_list_id = ? AND
-                           jobs_list_post_revisions.author = ?",
-                           Time.now, self.id, author],
+                           jobs_list_post_revisions.job_status = ?",
+                           Time.now, self.id, job_status],
           :per_page => items_per_page }.merge(options))
   end
 
@@ -168,7 +168,7 @@ class JobsList::JobsListJobsList < DomainModel
     JobsList::JobsListPost.find(:first,
                         :include => [ :active_revision ],
                         :order => 'published_at DESC',
-                        :conditions => ["jobs_list_posts.status in('published','preview') AND jobs_list_jobs_list_id=? AND jobs_list_posts.permalink=?",self.id,permalink])
+                        :conditions => ["jobs_list_posts.status in('published') AND jobs_list_jobs_list_id=? AND jobs_list_posts.permalink=?",self.id,permalink])
   end
 
   def content_type_name
@@ -218,7 +218,7 @@ class JobsList::JobsListJobsList < DomainModel
     boolean_options :category_override
   end
 
-  @@import_fields  = %w(title permalink author published_at preview body embedded_media).map(&:to_sym)
+  @@import_fields  = %w(title permalink job_status published_at body).map(&:to_sym)
 
   def import_file(domain_file,user)
      filename = domain_file.filename
@@ -230,7 +230,7 @@ class JobsList::JobsListJobsList < DomainModel
 
        post = self.jobs_list_posts.find_by_permalink(args[:permalink]) if !args[:permalink].blank?
 
-       args[:author] = user.name if args[:author].blank?
+       args[:job_status] = user.name if args[:job_status].blank?
        post ||= self.jobs_list_posts.build
 
        post.attributes = args

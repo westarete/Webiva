@@ -128,7 +128,7 @@ class JobsList::AddJobsListWizard < WizardModel
   end
 
   def create_dummy_post(cat)
-    post = self.jobs_list.jobs_list_posts.create :body => DummyText.paragraphs(1+rand(3), :max => 1), :author => DummyText.words(1).split(' ')[0..1].join(' '), :title => DummyText.words(1), :status => 'published', :published_at => Time.now
+    post = self.jobs_list.jobs_list_posts.create :body => DummyText.paragraphs(1+rand(3), :max => 1), :job_status => DummyText.words(1).split(' ')[0..1].join(' '), :title => DummyText.words(1), :status => 'published', :published_at => Time.now
     JobsList::JobsListPostsCategory.create :jobs_list_post_id => post.id, :jobs_list_category_id => cat.id
     post
   end

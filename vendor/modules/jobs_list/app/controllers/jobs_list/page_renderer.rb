@@ -41,8 +41,8 @@ class JobsList::PageRenderer < ParagraphRenderer
       category_filter  = list_type_identifier
     elsif list_type == 'tag'
       tag_filter = list_type_identifier
-    elsif list_type == 'author'
-      author_filter = CGI.unescape(list_type_identifier) # Author name
+    elsif list_type == 'job_status'
+      job_status_filter = CGI.unescape(list_type_identifier) # Author name
     end
 
     list_connection_detail, category_filter = page_connection(:category) if page_connection(:category)
@@ -50,7 +50,7 @@ class JobsList::PageRenderer < ParagraphRenderer
 
     if list_type && ! editor?
       list_type = list_type.downcase unless list_type.blank?
-      unless (['author','category','tag','archive'].include?(list_type.to_s))
+      unless (['job_status','category','tag','archive'].include?(list_type.to_s))
         raise SiteNodeEngine::MissingPageException.new(site_node, language) if list_type_identifier && site_node.id == @options.detail_page_id
         set_page_connection(:category, nil)
         return render_paragraph :text => ''
@@ -86,8 +86,8 @@ class JobsList::PageRenderer < ParagraphRenderer
       if jobs_list
         if list_type.to_s == 'archive'
           pages,entries = jobs_list.paginate_posts_by_month(page,list_type_identifier,items_per_page,:large => @options.skip_total)
-        elsif list_type.to_s == 'author'
-          pages,entries = jobs_list.paginate_posts_by_author(page,author_filter,items_per_page,:large => @options.skip_total)
+        elsif list_type.to_s == 'job_status'
+          pages,entries = jobs_list.paginate_posts_by_job_status(page,job_status_filter,items_per_page,:large => @options.skip_total)
         else
           pages,entries = jobs_list.paginate_posts(@options.skip_page ? 1 : page,items_per_page,:large => @options.skip_total, :category_filter => category_filter, :tag_filter => tag_filter, :order => @options.order == 'date' ? 'jobs_list_posts.published_at DESC' : 'jobs_list_posts.rating DESC')
         end
@@ -132,9 +132,8 @@ class JobsList::PageRenderer < ParagraphRenderer
                                                  :list_page => get_list_page(jobs_list),
                                                  :jobs_list => jobs_list)
       cache[:title] = entry ? entry.title : ''
-      cache[:keywords] = (entry && !entry.keywords.blank?) ? entry.keywords : nil
       cache[:entry_id] = entry ? entry.id : nil
-      cache[:comments_ok] = entry ? ! entry.disallow_comments : true
+      cache[:comments_ok] = false
     end
 
     if result.entry_id
@@ -144,7 +143,6 @@ class JobsList::PageRenderer < ParagraphRenderer
       set_page_connection(:comments_ok, result.comments_ok)
       set_title(result.title)
       set_content_node(result.content_node_id)
-      html_include('meta_keywords',result.keywords) if result.keywords 
     else
       return render_paragraph :text => '' if (['', 'category','tag','archive'].include?(conn_id.to_s.downcase)) && site_node.id == @options.list_page_id
       raise SiteNodeEngine::MissingPageException.new( site_node, language ) unless editor?

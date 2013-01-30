@@ -110,7 +110,6 @@ class JobsList::EditRenderer < ParagraphRenderer
         end
 
       if @entry.valid?
-        @entry.generate_preview 
         @entry.save
         if @entry.published? &&  !@published 
           @handlers = get_handler_info(:jobs_list,:targeted_after_publish)

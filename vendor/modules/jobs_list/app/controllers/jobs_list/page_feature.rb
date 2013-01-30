@@ -8,12 +8,11 @@ class JobsList::PageFeature < ParagraphFeature
     <cms:entries>
       <cms:entry>
         <div class='jobs_list_entry'>
-          <cms:image align='left' border='10' size='preview' shadow='1' />
           <h2><cms:detail_link><cms:title/></cms:detail_link></h2>
-          <cms:preview/>
-          <cms:more><cms:detail_link>Read More...</cms:detail_link><br/><br/></cms:more>
+          <cms:body/>
+          <cms:detail_link>Read More...</cms:detail_link><br/><br/>
           <div class='jobs_list_info'>
-             Posted <cms:published_at /> by <cms:author/> | <cms:detail_link>User Comments (<cms:comment_count/>)</cms:detail_link><br/><br/>
+             Posted <cms:published_at /> by <cms:job_status/> | <cms:detail_link>User Comments (<cms:comment_count/>)</cms:detail_link><br/><br/>
              <cms:categories> Categories: <cms:value/> <cms:tags> | </cms:tags> </cms:categories> 
              <cms:tags> Tags: <cms:value/> </cms:tags>
           </div>
@@ -64,23 +63,11 @@ class JobsList::PageFeature < ParagraphFeature
   feature :jobs_list_entry_detail, :default_feature => <<-FEATURE
       <cms:entry>
         <div class='jobs_list_entry'>
-          <cms:image align='left' border='10' size='preview' shadow='1' />
           <h1><cms:title/></h1>
           <cms:body/>
         </div>
-          <cms:embedded_media>
-            <div style='clear:both;'></div>
-            <br/><br/>
-            <div align='center'><cms:value/></div>
-            <br/>
-          </cms:embedded_media>
-          <cms:media_file>
-            <div style='clear:both;'></div>
-            <br/><br/>
-            <div style='text-align:center;'><cms:value/></div>
-          </cms:media_file>
           <div class='jobs_list_info'>
-             Posted <cms:published_at /> by <cms:author/> <br/>
+             Posted <cms:published_at /> by <cms:job_status/> <br/>
              <cms:categories>Categories: <cms:value/> <cms:tags>|</cms:tags> </cms:categories> 
              <cms:tags>Tags: <cms:value/></cms:tags>
           </div>
@@ -102,38 +89,28 @@ class JobsList::PageFeature < ParagraphFeature
     c.value_tag('jobs_list_description') { |t| data[:jobs_list].description }
     c.value_tag('jobs_list_target_id') { |t| data[:jobs_list].target_id }
     
-    
     c.value_tag('entry:jobs_list') { |t| t.locals.entry.jobs_list_jobs_list.name  }
-    c.value_tag('entry:embedded_media') { |tag| tag.locals.entry.embedded_media }
-    
-    c.media_tag('entry:media_file') { |tag| tag.locals.entry.media_file }
 
     c.value_tag('entry:rating') { |t| (t.locals.entry.rating * (t.attr['multiplier'] || 1).to_i).floor.to_i }
     c.value_tag('entry:rating_display') { |t| sprintf("%.1f",t.locals.entry.rating) }
     
     c.date_tag('entry:published_at',"%H:%M%p on %B %d %Y".t) { |t|  t.locals.entry.published_at }
-    c.image_tag('entry:image') { |t| t.locals.entry.image }
     c.expansion_tag('entry:comments') { |t| t.locals.entry.comments_count > 0 }
     c.value_tag('entry:comment_count') { |t| t.locals.entry.comments_count }
     c.value_tag('entry:approved_comment_count') { |t| t.locals.entry.approved_comments_count }
     
     
-    %w(title author).each do |elem|
+    %w(title job_status).each do |elem|
       c.value_tag('entry:' + elem) { |tag| h(tag.locals.entry.send(elem)) }
     end
     
     c.value_tag('entry:id') { |t| t.locals.entry.id }
     c.value_tag('entry:permalink') { |t| t.locals.entry.permalink }
     c.value_tag('entry:body') { |tag| tag.locals.entry.body_content }
-    c.value_tag('entry:preview') {  |tag| tag.locals.entry.preview_content }
     c.value_tag('entry:content_node_id') { |t| t.locals.entry.content_node.id }
 
-    c.value_tag 'entry:preview_title' do |tag|
-      h(tag.locals.entry.preview_title.blank? ? tag.locals.entry.title : tag.locals.entry.preview_title)
-    end
 
-    c.expansion_tag('entry:more') { |tag| !tag.locals.entry.preview.blank? }
-    c.link_tag('entry:detail') do |tag| 
+    c.link_tag('entry:detail') do |tag|
       if !data[:detail_page].blank?
         SiteNode.link data[:detail_page], tag.locals.entry.permalink
       else
@@ -245,38 +222,26 @@ class JobsList::PageFeature < ParagraphFeature
       end
 
 
-      c.loop_tag('author') do |tag|
+      c.loop_tag('job_status') do |tag|
         JobsList::JobsListPost.find(:all,
                             :include => ['active_revision'],
                             :conditions => {'jobs_list_posts.status' => 'published',
                                             'jobs_list_post_revisions.status' => 'active',
                                             :jobs_list_jobs_list_id => data[:jobs_list_id]},
-                            :order => 'jobs_list_post_revisions.author',
-                            :group => 'jobs_list_post_revisions.author')
+                            :order => 'jobs_list_post_revisions.job_status',
+                            :group => 'jobs_list_post_revisions.job_status')
       end
 
-      c.link_tag('author:author') do |tag|
-        SiteNode.link(data[:list_page], 'author', CGI::escape(tag.locals.author.author))
+      c.link_tag('job_status:job_status') do |tag|
+        SiteNode.link(data[:list_page], 'job_status', CGI::escape(tag.locals.job_status.job_status))
       end
 
-      c.value_tag('author:name') { |tag| tag.locals.author.author }
+      c.value_tag('job_status:name') { |tag| tag.locals.job_status.job_status }
 
       c.link_tag('list_page') { |tag| data[:list_page] }
     end
   end
 
-  feature :jobs_list_post_preview, :default_feature => <<-DEFAULT_FEATURE
-<cms:entry>
-<cms:image align='left' size='thumb'/><cms:preview/>
-</cms:entry>
-DEFAULT_FEATURE
-
-  def jobs_list_post_preview_feature(data)
-    webiva_feature(:jobs_list_post_preview) do |c|
-       c.expansion_tag('entry') { |t| t.locals.entry = data[:entry] }
-       jobs_list_entry_tags(c,data)
-    end
-  end
 end
 
 

@@ -19,7 +19,7 @@ class JobsList::JobsListPost < DomainModel
 
   validates_datetime :published_at, :allow_nil => true
    
-  has_options :status, [ [ 'Draft','draft'],['Preview','preview'], ['Published','published']] 
+  has_options :status, [ [ 'Draft','draft'], ['Published','published']]
 
   has_many :comments, :as => :target
 
@@ -55,7 +55,7 @@ class JobsList::JobsListPost < DomainModel
   end
   
   content_node :container_type => :content_node_container_type,  :container_field => Proc.new { |post| post.content_node_container_id },
-  :preview_feature => '/jobs_list/page_feature/jobs_list_post_preview', :push_value => true, :published_at => :published_at, :published => Proc.new { |post| post.published? }
+  :push_value => true, :published_at => :published_at, :published => Proc.new { |post| post.published? }
 
 
 
@@ -75,8 +75,7 @@ class JobsList::JobsListPost < DomainModel
   def content_node_body(language)
     body = []
     body << self.active_revision.body_html if self.active_revision
-    body << self.active_revision.author
-    body << self.keywords
+    body << self.active_revision.job_status
     body += self.jobs_list_categories.map(&:name)
     body += self.content_tags.map(&:name)
     body.join(" ")
@@ -175,28 +174,21 @@ class JobsList::JobsListPost < DomainModel
   end
 
 
-  [ :title, :media_file_id, :domain_file_id, :body, :end_user_id, :keywords,
-    :author, :embedded_media, :preview_title, :preview ].each do |fld|
+  [ :title, :body, :job_status ].each do |fld|
     class_eval("def #{fld}; self.revision.#{fld}; end")
     class_eval("def #{fld}=(val); self.revision.#{fld} = val; end")
-    end
+  end
 
   def name
      self.revision.title
   end
 
-  [ :domain_file, :preview_content, :end_user,:media_file, :body_content ].each do |fld|
+  [ :body_content ].each do |fld|
     class_eval("def #{fld}; self.revision.#{fld}; end")
   end
 
-  def image; self.revision.domain_file; end
-
   def self.get_content_description 
     "Jobs List Post".t
-  end
-  
-  def preview
-    self.revision.preview
   end
 
   def self.get_content_options
@@ -206,10 +198,6 @@ class JobsList::JobsListPost < DomainModel
   end
 
   include ActionView::Helpers::TextHelper
-
-  def generate_preview
-   self.revision.preview =  truncate(Util::TextFormatter.text_plain_generator(self.revision.body),:length => 140 )
-  end
 
   def self.comment_posted(jobs_list_id)
      
@@ -269,17 +257,11 @@ class JobsList::JobsListPost < DomainModel
     self.status = 'published'
     self.published_at = tm
   end
-  
-  def preview!
-    self.status = 'preview'
-    self.save
-  end
 
   def duplicate!
     new_post = self.clone
 
-      [:media_file_id, :domain_file_id, :body, :end_user_id, :keywords,
-    :author, :embedded_media, :preview_title, :preview ].each do |fld|
+    [ :body, :job_status ].each do |fld|
         new_post.send("#{fld}=",self.send(fld))
     end
     new_post.created_at = nil
@@ -295,10 +277,6 @@ class JobsList::JobsListPost < DomainModel
 
   def make_draft
     self.status = 'draft'  
-  end
-
-  def make_preview
-    self.status = 'preview'
   end
   
   def published?

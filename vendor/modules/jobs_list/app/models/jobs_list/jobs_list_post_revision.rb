@@ -8,16 +8,8 @@ class JobsList::JobsListPostRevision < DomainModel
 
   belongs_to :jobs_list_post, :class_name => 'JobsList::JobsListPost', :foreign_key => 'jobs_list_post_id'
 
-  has_domain_file :domain_file_id
-  has_domain_file :media_file_id
   
   apply_content_filter(:body => :body_html)  do |revision|
-    { :filter => revision.jobs_list_jobs_list.content_filter,
-      :folder_id => revision.jobs_list_jobs_list.folder_id
-    }
-  end
-
-  apply_content_filter(:preview => :preview_html)  do |revision|
     { :filter => revision.jobs_list_jobs_list.content_filter,
       :folder_id => revision.jobs_list_jobs_list.folder_id
     }
@@ -32,14 +24,6 @@ class JobsList::JobsListPostRevision < DomainModel
     self.body_html.blank? ? self.body : self.body_html
   end
   
-  def preview_content
-    if self.preview.blank?
-      body_content
-    else
-      self.preview_html.blank? ? self.preview : self.preview_html
-    end
-  end
-  
  # Generate text from HTML
  def text_generator(html)
    link_sanitizer = HTML::LinkSanitizer.new
@@ -47,8 +31,6 @@ class JobsList::JobsListPostRevision < DomainModel
         "\n#{$2}\n#{'=' * $2.length}\n\n"
     end.gsub("<br/>","\n")).gsub("&nbsp;"," "))
  end
-   
-
 
  def ae_some_html(s)
     return if s.blank?
