@@ -77,7 +77,6 @@
   <table width='100%'>
     <%= f.text_field :title, :vertical => true, :required => true, :style=>'width:100%', :label => 'Job Title' %>
     <%= f.text_field :permalink, :label => 'Permalink (Leave blank to have one created for you)', :vertical => true, :style => 'width:100%;', :noun => 'Permalink' %>
-    <%= f.text_field :author, :vertical => true, :style=>'width:100%', :label => 'Job Status' %>
     <%= f.editor_area :body, :vertical => true, :required => true, :rows => 35, :style=>'width:100%', :label => 'Description' , :content_filter => @jobs_list.content_filter %>
 
     <% if @jobs_list.content_model -%>
@@ -94,6 +93,14 @@
   </td>
   <td nowrap='1' width='200' valign='top' style='padding-left:20px;'>
 
+    <div class='sidebar_header'>
+      Job Status
+    </div>
+    <div class='sidebar_group'>
+      <label for='job_status_active'><input onclick='' id='job_status_active' name='update_entry[author]' value='Active' <%= "checked='checked'" if @entry.author == 'Active' %> type='radio'><%= "Active".t %></label><br/>
+      <label for='job_status_filled'><input onclick='' id='job_status_filled' name='update_entry[author]' value='Filled' <%= "checked='checked'" if @entry.author == 'Filled' %> type='radio'><%= "Filled".t %></label>
+    </div>
+    <hr/>
     <div class='sidebar_header'>
       Categories
     </div>
