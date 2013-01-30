@@ -261,6 +261,7 @@ form td.label_vertical {
  padding-right:15px;
  vertical-align: bottom;
  height: 25px;
+ padding-bottom: 1px;
 }
 
 
@@ -283,6 +284,11 @@ form input:focus, form textarea:focus  {
     padding-top: 6px;
     color: #3B648C;
     font-weight: bold;
+    padding-bottom: 1px;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 4px;
 }
 
 /*form input[type=submit], form input[type=button] {
