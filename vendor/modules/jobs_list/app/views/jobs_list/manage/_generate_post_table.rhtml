@@ -1,0 +1,9 @@
+<% active_table_for :generate_post_table, @tbl do |t| -%>
+<tr <%= highlight_row 'post',t.id %> >
+  <td><button onclick='JobsListGenerator.addPost(<%= t.id %>); return false;'>Add Post</button></td>
+  <td><%= t.jobs_list_jobs_list ? v(t.jobs_list_jobs_list.name) : '' %></td>
+  <td><%= t.active_revision.title %></td>
+  <td align='center'><%= t.published_at ? t.published_at.localize(Configuration.datetime_format.t) : '-' %></td>
+  <td align='center'><%= t.updated_at ? t.updated_at.localize(Configuration.datetime_format.t) : '-' %></td>
+</tr>
+<% end -%>

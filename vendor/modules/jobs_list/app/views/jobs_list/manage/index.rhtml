@@ -1,0 +1,33 @@
+<script>
+<%=  active_table_javascript %>
+
+var PostEditor = {
+
+  createMailTemplate: function(pid) {
+  
+     
+  }
+  
+}
+</script>
+
+<% action_panel :more => true do |p| -%>
+  <%= p.link "Post a new Job",   :action => 'post', :path => @jobs_list.id, :icon => 'add.png' %>
+<% end -%>
+
+<% more_action_panel do |p| -%>
+  <%= p.link "Jobs List Categories",  :controller => 'categories', :path => @jobs_list.id, :icon => 'edit.gif' %>
+  <%= p.link "Configure Jobs List", :action => 'configure', :path => @jobs_list.id, :icon => 'configure.gif' if myself.has_role?('jobs_list_config') %>
+  <%= p.link "Import Entries", :action => "import", :path => @jobs_list.id, :icon => "upload.gif" if myself.has_role?('jobs_list_config') %>
+  <%= p.link "Delete Jobs List",  :action => 'delete', :path => @jobs_list.id, :icon =>'delete.gif',:right => true if myself.has_role?('jobs_list_config') %>
+<% end -%>
+
+
+<hr/>
+
+
+<div class='admin_content'>
+<div id='post_table'>
+<%= render :partial => 'post_table' %>
+</div>
+</div>

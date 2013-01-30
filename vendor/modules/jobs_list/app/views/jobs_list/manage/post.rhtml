@@ -6,7 +6,7 @@
           $('new_category').value = '';
           
           new Ajax.Updater('post_categories',
-                          '<%= url_for :action => "add_category", :path => @blog.id %>',
+                          '<%= url_for :action => "add_category", :path => @jobs_list.id %>',
                           { parameters: params, insertion: Insertion.Bottom, evalScripts: true  } );
   
         }
@@ -17,7 +17,7 @@
       },
       
       selectTags: function() {
-        SCMS.remoteOverlay("<%= url_for :action => 'add_tags', :path => @blog.id %>", { existing_tags: $('entry_tags').value } );
+        SCMS.remoteOverlay("<%= url_for :action => 'add_tags', :path => @jobs_list.id %>", { existing_tags: $('entry_tags').value } );
       },
       
      addTagInPopup: function(tag_name) {
@@ -75,20 +75,14 @@
 <tr>
   <td valign='top'>
   <table width='100%'>
-    <%= f.text_field :title, :vertical => true, :required => true, :style=>'width:100%' %>
-    <%= f.filemanager_image :domain_file_id, :vertical => true, :label => 'Post Image (Optional)' %>
+    <%= f.text_field :title, :vertical => true, :required => true, :style=>'width:100%', :label => 'Job Title' %>
     <%= f.text_field :permalink, :label => 'Permalink (Leave blank to have one created for you)', :vertical => true, :style => 'width:100%;', :noun => 'Permalink' %>
-    <%= f.text_field :author, :vertical => true, :style=>'width:100%' %>
-    <%= f.editor_area :body, :vertical => true, :required => true, :rows => 35, :style=>'width:100%', :content_filter => @blog.content_filter %>
+    <%= f.editor_area :body, :vertical => true, :required => true, :rows => 35, :style=>'width:100%', :label => 'Description' , :content_filter => @jobs_list.content_filter %>
 
-    <%= f.header "Additional Fields" %>
-    <%= f.editor_area :preview, :vertical => true, :rows => 12, :label => 'Preview (Optional)', :style=>'width:100%', :content_filter => @blog.content_filter %>
-    <%= f.yes_no :disallow_comments, :vertical => true, :description => 'requires page connection to be set' %>
-
-    <% if @blog.content_model -%>
-      <%= f.header "Custom Fields (%s)" / @blog.content_model.name %>
+    <% if @jobs_list.content_model -%>
+      <%= f.header "Custom Fields (%s)" / @jobs_list.content_model.name %>
       <% cms_subfields_for 'entry[data_model]', @entry.data_model do |cf| -%>
-        <% @blog.content_model.content_model_fields.each do |field| -%>
+        <% @jobs_list.content_model.content_model_fields.each do |field| -%>
           <%= field.form_field(cf, :vertical => true, :editor => true) %>
         <% end -%>
       <% end -%>
@@ -100,10 +94,18 @@
   <td nowrap='1' width='200' valign='top' style='padding-left:20px;'>
 
     <div class='sidebar_header'>
+      Job Status
+    </div>
+    <div class='sidebar_group'>
+      <label for='job_status_active'><input onclick='' id='job_status_active' name='update_entry[author]' value='Active' <%= "checked='checked'" if @entry.author == 'Active' %> type='radio'><%= "Active".t %></label><br/>
+      <label for='job_status_filled'><input onclick='' id='job_status_filled' name='update_entry[author]' value='Filled' <%= "checked='checked'" if @entry.author == 'Filled' %> type='radio'><%= "Filled".t %></label>
+    </div>
+    <hr/>
+    <div class='sidebar_header'>
       Categories
     </div>
     <div class='sidebar_group'>
-      <input type='text' name='new_category' id='new_category' onkeypress='if(SCMS.isEnter(event)) { PostEditor.createCategory(); return false; } else { return true; }' size='15'><input type='button' value='New' style='margin-left: 10px;' onclick='PostEditor.createCategory();' />
+      <input type='text' name='new_category' id='new_category' onkeypress='if(SCMS.isEnter(event)) { PostEditor.createCategory(); return false; } else { return true; }' size='15'><input type='button' value='New' style="margin-left: 10px;" onclick='PostEditor.createCategory();' />
     <div id='post_categories'>
         <% @categories.each do |category| -%>
 <label for='category_<%= category.id %>'><input type='checkbox' id='category_<%= category.id %>' name='categories[]' value='<%= category.id %>' <%= 'checked="checked"' if @selected_category_ids.include?(category.id)  %> /><%= h category.name %></label><br/>
