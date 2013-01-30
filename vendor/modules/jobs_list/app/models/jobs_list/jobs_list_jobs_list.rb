@@ -6,10 +6,6 @@ class JobsList::JobsListJobsList < DomainModel
   validates_presence_of :name
   validates_presence_of :content_filter
 
-  belongs_to :target, :polymorphic => true
-
-  belongs_to :jobs_list_target
-
   belongs_to :content_model
   belongs_to :content_publication
 
@@ -22,18 +18,12 @@ class JobsList::JobsListJobsList < DomainModel
 
   attr_accessor :add_to_site
 
-  alias_method :targeted_jobs_list, :target
-
   include SiteAuthorizationEngine::Target
   access_control :edit_permission
-  
+
   serialize :options
   
-  content_node_type :jobs_list, "JobsList::JobsListPost", :content_name => :name,:title_field => :title, :url_field => :permalink, :except => Proc.new { |blg| blg.is_user_jobs_list? }
-  
-  def self.create_user_jobs_list(name,target)
-    self.create(:name => name, :target => target, :is_user_jobs_list => true)
-  end
+  content_node_type :jobs_list, "JobsList::JobsListPost", :content_name => :name,:title_field => :title, :url_field => :permalink
 
   def content_admin_url(jobs_list_entry_id)
     {  :controller => '/jobs_list/manage', :action => 'post', :path => [ self.id, jobs_list_entry_id ],
@@ -181,13 +171,6 @@ class JobsList::JobsListJobsList < DomainModel
 
   def before_save
     self.content_publication_id = nil if self.content_model.nil? || self.content_publication.nil? || self.content_model.id != self.content_publication.content_model_id
-  end
-
-  def before_validation_on_create
-    if self.is_user_jobs_list?
-      self.content_filter = 'safe_html' if self.is_user_jobs_list?
-      self.jobs_list_target_id = JobsList::JobsListTarget.fetch_for_target(self.target)
-    end
   end
 
   def content_detail_link_url(path,obj)

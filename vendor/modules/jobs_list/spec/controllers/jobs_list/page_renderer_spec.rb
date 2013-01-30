@@ -40,20 +40,6 @@ describe JobsList::PageRenderer, :type => :controller do
     renderer_get @rnd
   end
 
-  it "should be able to list posts from target page connection" do
-    @jobs_list.is_user_jobs_list = true
-    @jobs_list.target = @post
-    @jobs_list.save.should be_true
-
-    options = { :jobs_list_target_id => @jobs_list.jobs_list_target_id}
-    inputs = { :jobs_list => [:container, @post] }
-    @rnd = generate_page_renderer('entry_list', options, inputs)
-
-    JobsList::JobsListJobsList.should_receive(:find_by_target_type_and_target_id).with(@post.class.to_s, @post.id,:conditions => { :jobs_list_target_id => @jobs_list.jobs_list_target_id } ).and_return(@jobs_list)
-
-    renderer_get @rnd
-  end
-
   it "should be able to list posts with list_type category" do
     options = {:jobs_list_id => @jobs_list.id}
     inputs = { :type => [:list_type, 'category'], :identifier => [:list_type_identifier, 'new2'] }
@@ -96,21 +82,6 @@ describe JobsList::PageRenderer, :type => :controller do
 
     @rnd.should_receive(:set_page_connection).with(:content_id, ['JobsList::JobsListPost',@post.id])
     @rnd.should_receive(:set_page_connection).with(:post, @post.id)
-
-    renderer_get @rnd
-  end
-
-  it "should be able to display a post by permalink using jobs list target" do
-    @jobs_list.is_user_jobs_list = true
-    @jobs_list.target = @post
-    @jobs_list.save.should be_true
-
-    options = { :jobs_list_target_id => @jobs_list.jobs_list_target_id }
-    inputs = { :input => [:post_permalink, @post.permalink], :jobs_list => [:container, @post] }
-    @rnd = generate_page_renderer('entry_detail', options, inputs)
-
-    JobsList::JobsListJobsList.should_receive(:find_by_target_type_and_target_id).with(@post.class.to_s, @post.id,:conditions => { :jobs_list_target_id => @jobs_list.jobs_list_target_id }).and_return(@jobs_list)
-    @jobs_list.should_receive(:find_post_by_permalink).with(@post.permalink).and_return(@post)
 
     renderer_get @rnd
   end

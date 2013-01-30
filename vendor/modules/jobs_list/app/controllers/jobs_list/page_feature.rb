@@ -87,8 +87,7 @@ class JobsList::PageFeature < ParagraphFeature
   def jobs_list_entry_tags(c,data)
     c.value_tag('jobs_list_name') { |t| data[:jobs_list].name }
     c.value_tag('jobs_list_description') { |t| data[:jobs_list].description }
-    c.value_tag('jobs_list_target_id') { |t| data[:jobs_list].target_id }
-    
+
     c.value_tag('entry:jobs_list') { |t| t.locals.entry.jobs_list_jobs_list.name  }
 
     c.value_tag('entry:rating') { |t| (t.locals.entry.rating * (t.attr['multiplier'] || 1).to_i).floor.to_i }

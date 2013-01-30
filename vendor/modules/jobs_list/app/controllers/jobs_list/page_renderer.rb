@@ -7,8 +7,7 @@ class JobsList::PageRenderer < ParagraphRenderer
   paragraph :entry_list
   paragraph :entry_detail
   paragraph :categories
-  paragraph :targeted_entry_detail
-  
+
   features '/jobs_list/page_feature'
 
   def get_module
@@ -151,52 +150,6 @@ class JobsList::PageRenderer < ParagraphRenderer
     render_paragraph :text => result.output
   end
 
-  def targeted_entry_detail
-    @options = paragraph_options(:targeted_entry_detail)
-    return render_paragraph :text => "[Configure Paragraph]" unless @options.jobs_list_target_id > 0
-
-    jobs_list = get_jobs_list
-
-    return render_paragraph :text => '' unless jobs_list
-
-    conn_type, conn_id = page_connection()
-    display_string = "#{conn_type}_#{conn_id}_#{myself.user_class_id}"
-
-    result = renderer_cache(jobs_list, display_string) do |cache|
-      entry = nil
-      if editor?
-        entry = jobs_list.jobs_list_posts.find(:first,:conditions => ['jobs_list_posts.status = "published" AND jobs_list_jobs_list_id=? ',jobs_list.id])
-      elsif conn_type == :post_permalink
-        entry = jobs_list.find_post_by_permalink(conn_id) if conn_id
-      end
-
-      cache[:output] = jobs_list_entry_detail_feature(:entry => entry,
-                                                 :list_page => get_list_page(jobs_list),
-                                                 :detail_page => site_node.node_path,
-                                                 :jobs_list => jobs_list)
-      cache[:title] = entry ? entry.title : ''
-      cache[:entry_id] = entry ? entry.id : nil
-    end
-
-    if result.entry_id
-      set_page_connection(:content_id, ['JobsList::JobsListPost',result.entry_id] )
-      set_page_connection(:post, result.entry_id )
-      set_title(result.title)
-      set_content_node(['JobsList::JobsListPost', result.entry_id])
-    else
-      raise SiteNodeEngine::MissingPageException.new( site_node, language ) unless editor?
-    end
-
-    require_css('gallery')
-
-    render_paragraph :text => result.output
-  end
-
-
-
-
-
-
   def categories
     @options = paragraph_options(:categories)
     
@@ -230,9 +183,7 @@ class JobsList::PageRenderer < ParagraphRenderer
       jobs_list = JobsList::JobsListJobsList.find(:first)
     else
       conn_type, conn_id = page_connection(:jobs_list)
-      if conn_type == :container
-        JobsList::JobsListJobsList.find_by_target_type_and_target_id(conn_id.class.to_s, conn_id.id,:conditions => {:jobs_list_target_id => @options.jobs_list_target_id})
-      elsif conn_type == :jobs_list_id
+      if conn_type == :jobs_list_id
         JobsList::JobsListJobsList.find_by_id(conn_id.to_i)
       end
     end
@@ -243,8 +194,6 @@ class JobsList::PageRenderer < ParagraphRenderer
     return nil unless detail_page
     if @options.include_in_path == 'jobs_list_id'
       detail_page += "/#{jobs_list.id}"
-    elsif  @options.include_in_path == 'target_id'
-      detail_page += "/#{jobs_list.target_id}"
     end
     SiteNode.link detail_page
   end
@@ -255,8 +204,6 @@ class JobsList::PageRenderer < ParagraphRenderer
     if jobs_list
       if @options.include_in_path == 'jobs_list_id'
         list_page += "/#{jobs_list.id}"
-      elsif  @options.include_in_path == 'target_id'
-        list_page += "/#{jobs_list.target_id}"
       end
     end
     SiteNode.link list_page

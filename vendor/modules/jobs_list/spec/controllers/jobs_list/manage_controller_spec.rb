@@ -227,10 +227,4 @@ describe JobsList::ManageController do
     end
   end
 
-  it "should be able to delete a user jobs list" do
-    @user_jobs_list = JobsList::JobsListJobsList.create(:name => 'Test Jobs List', :content_filter => 'full_html', :is_user_jobs_list => true)
-    assert_difference 'JobsList::JobsListJobsList.count', -1 do
-      post 'display_jobs_list_list_table', :table_action => 'delete', :jobs_list => {@user_jobs_list.id.to_s => @user_jobs_list.id.to_s}
-    end
-  end
 end

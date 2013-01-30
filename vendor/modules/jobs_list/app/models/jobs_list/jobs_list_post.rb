@@ -53,19 +53,8 @@ class JobsList::JobsListPost < DomainModel
   content_node :container_type => :content_node_container_type,  :container_field => Proc.new { |post| post.content_node_container_id },
   :push_value => true, :published_at => :published_at, :published => Proc.new { |post| post.published? }
 
-
-
   def revision
     @revision ||= self.active_revision ? self.active_revision.clone : JobsList::JobsListPostRevision.new
-  end
-
-  # Special permalink for targeted jobs lists
-  def target_permalink
-    if self.jobs_list_jobs_list.targeted_jobs_list
-      "#{self.jobs_list_jobs_list.targeted_jobs_list.url}/#{self.permalink}"
-    else
-      self.permalink
-    end
   end
 
   def content_node_body(language)
@@ -78,15 +67,13 @@ class JobsList::JobsListPost < DomainModel
   end
 
   def content_node_container_type
-    self.jobs_list_jobs_list && self.jobs_list_jobs_list.is_user_jobs_list? ? "JobsList::JobsListTarget" : 'JobsList::JobsListJobsList'
+    if self.jobs_list_jobs_list
+      'JobsList::JobsListJobsList'
+    end
   end
 
   def content_node_container_id
-    self.jobs_list_jobs_list.is_user_jobs_list? ? 'jobs_list_target_id' : 'jobs_list_jobs_list_id'
-  end
-
-  def jobs_list_target_id
-    self.jobs_list_jobs_list.jobs_list_target_id
+    'jobs_list_jobs_list_id'
   end
 
   def self.paginate_published(page,items_per_page,jobs_list_ids = [],options = {})

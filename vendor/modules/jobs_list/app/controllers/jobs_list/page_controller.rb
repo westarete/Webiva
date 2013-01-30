@@ -7,10 +7,9 @@ class JobsList::PageController < ParagraphController
   editor_for :entry_list, :name => 'Jobs List Entry List', :features => ['jobs_list_entry_list'],
                        :inputs => { :type =>       [[:list_type, 'List Type (Category,Tags,Archive)', :path]],
                                     :identifier => [[:list_type_identifier, 'Type Identifier - Category, Tag, or Month name', :path]],
-                                    :category => [[:category, 'Category Name', :path ]],
-                                    :tag => [[:tag, "Tag Name", :path ]],
-                                    :jobs_list =>       [[:container, 'Jobs List Target', :target],
-                                                    [:jobs_list_id,'Jobs List ID',:path]]
+                                    :category =>   [[:category, 'Category Name', :path ]],
+                                    :tag =>        [[:tag, "Tag Name", :path ]],
+                                    :jobs_list =>  [[:jobs_list_id,'Jobs List ID',:path]]
                                   },
                        :outputs => [[:category, 'Selected Category', :jobs_list_category_id]]
 
@@ -22,23 +21,12 @@ class JobsList::PageController < ParagraphController
                        :outputs => [[:content_id, 'Content Identifier', :content],
                                     [:content_node_id, 'Content Node', :content_node_id ],
                                     [:post, 'Jobs List Post', :post_id ]]
-                                  
-  editor_for :targeted_entry_detail, :name => "Targeted Jobs List Entry Detail",  :features => ['jobs_list_entry_detail'],
-                      :inputs => { 
-                         :input => [[ :post_permalink, 'Jobs List Post Permalink', :path ]],
-                         :jobs_list => [[ :container, 'Jobs List Target', :target]]
-                         },
-                        :outputs => [[:content_id, 'Content Identifier', :content],
-                                     [:post, 'Jobs List Post', :post_id ]]
-
-
-
 
   editor_for :categories, :name => 'Jobs List Categories' ,:features => ['jobs_list_categories'],
                         :inputs => [[:category, 'Selected Category', :jobs_list_category_id]]
  
   class EntryListOptions < HashModel
-    attributes :jobs_list_id => 0, :items_per_page => 10, :detail_page => nil, :list_page_id => nil, :include_in_path => nil,:jobs_list_target_id => nil, :category => nil, :limit_by => 'category', :jobs_list_ids => [], :skip_total => false, :skip_page => false, :order => 'date'
+    attributes :jobs_list_id => 0, :items_per_page => 10, :detail_page => nil, :list_page_id => nil, :include_in_path => nil, :category => nil, :limit_by => 'category', :jobs_list_ids => [], :skip_total => false, :skip_page => false, :order => 'date'
 
     integer_array_options :jobs_list_ids
 
@@ -56,7 +44,6 @@ class JobsList::PageController < ParagraphController
      fld(:list_page_id, :page_selector,  :description => 'Leave blank to use the current page as the list page'),
    	 fld(:items_per_page, :select, :options => (1..50).to_a),
      fld('Advanced Options',:header),
-     fld(:jobs_list_target_id, :select, :options => :jobs_list_target_options, :description => 'Advanced use only'),
      fld(:jobs_list_ids, :ordered_array, :options => :jobs_list_name_options, :label => 'For multiple jobs_lists',:description => 'Leave blank to show all jobs lists'),
      fld(:order,:select,:options => [['Newest','date'],['Rating','rating']]),
      fld(:limit_by,:radio_buttons,:label => 'Limit to',:options => [[ 'Categories','category'],['Tags','tag']]),
@@ -65,8 +52,6 @@ class JobsList::PageController < ParagraphController
      fld(:skip_page, :yes_no, :description => "Set to yes to skip looking at the current page number\nuseful for framework paragraphs")
     
 		 )
-
-    def jobs_list_target_options; JobsList::JobsListTarget.select_options_with_nil; end
 
     def jobs_list_name_options
       JobsList::JobsListJobsList.find_select_options(:all,:order=>'name')
@@ -77,9 +62,7 @@ class JobsList::PageController < ParagraphController
     end
 
     def include_in_path_options
-      [["Don't include path in target", nil],
-       ["Include Jobs List ID in detail path", "jobs_list_id"],
-       ["Include Target ID in detail path", "target_id"]]
+      [["Include Jobs List ID in detail path", "jobs_list_id"]]
     end
   end
     
@@ -101,23 +84,8 @@ class JobsList::PageController < ParagraphController
     end
 
     def include_in_path_options
-      [["Don't include path in target", nil],
-       ["Include Jobs List ID in detail path", "jobs_list_id"],
-       ["Include Target ID in detail path", "target_id"]]
+      [["Include Jobs List ID in detail path", "jobs_list_id"]]
     end
-  end
-
-
-  class TargetedEntryDetailOptions < HashModel
-    attributes :jobs_list_target_id => 0
-
-    validates_presence_of :jobs_list_target_id
-    options_form(fld(:jobs_list_target_id, :select, :options => :jobs_list_target_options))
-
-    def jobs_list_target_options; JobsList::JobsListTarget.select_options_with_nil; end
-
-    canonical_paragraph "JobsList::JobsListTarget", :jobs_list_target_id
-
   end
   
   class CategoriesOptions < HashModel

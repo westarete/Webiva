@@ -218,7 +218,7 @@ class JobsList::ManageController < ModuleController
       JobsList::JobsListJobsList.destroy(bids) if act == 'delete'
     end
   
-    @tbl = jobs_list_list_table_generate params, :order => 'jobs_list_jobs_lists.created_at DESC', :conditions => ['is_user_jobs_list=1']
+    @tbl = jobs_list_list_table_generate params, :order => 'jobs_list_jobs_lists.created_at DESC'
     render :partial => 'jobs_list_list_table' if display
   end
   
@@ -231,7 +231,6 @@ class JobsList::ManageController < ModuleController
 
   def jobs_list_path(jobs_list,path=nil)
     base = ['Content']
-    base << 'Site Jobs Lists' if jobs_list.is_user_jobs_list?
     if path
       cms_page_path (base + [[ "%s",url_for(:action => 'index',:path => jobs_list.id),jobs_list.name ]]),path
     else
