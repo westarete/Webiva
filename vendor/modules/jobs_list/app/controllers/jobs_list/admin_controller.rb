@@ -9,7 +9,6 @@ class JobsList::AdminController < ModuleController
 
   content_model :jobs_lists
 
-  register_handler :structure, :wizard, "JobsList::AddJobsListWizard"
   register_handler :feed, :rss, "JobsList::RssHandler"
   register_handler :feed, :rss, "JobsList::MultipleRssHandler"
   register_handler :mail_manager, :generator, "JobsList::ManageController"
@@ -43,14 +42,8 @@ class JobsList::AdminController < ModuleController
 
     if(request.post? && params[:jobs_list])
       if(@jobs_list.save)
-        if !@jobs_list.add_to_site.blank?
-          @version = SiteVersion.current
-          redirect_to JobsList::AddJobsListWizard.wizard_url.merge(:jobs_list_id => @jobs_list.id, :version => @version.id)
-          return
-        else
-          redirect_to :controller => '/jobs_list/manage', :path => @jobs_list.id
-          return
-        end
+        redirect_to :controller => '/jobs_list/manage', :path => @jobs_list.id
+        return
       end
     end
 

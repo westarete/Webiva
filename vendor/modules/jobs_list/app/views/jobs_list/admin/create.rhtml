@@ -6,7 +6,6 @@
 <%= f.text_area :description, :vertical => true %>
 <%= f.select :content_filter, JobsList::JobsListJobsList.filter_options, :vertical => true %>
 <%= f.filemanager_folder :folder_id, :vertical => true %>
-<%= f.check_boxes :add_to_site, [["Run the add to site wizard".t,true]],:single => true, :vertical => true -%>
 <%= f.submit_tag 'Create Jobs List', :vertical => true%>
 <% end -%>
 </div>
