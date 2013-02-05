@@ -1,12 +1,13 @@
 set :application, "webiva"
 set :scm, :git
 set :repository, "git://github.com/westarete/Webiva.git"
+set :branch, "git:jobs-list-module"
 
 set :module_repository, "git://github.com/cykod/"
 
-role :web, "shiitake.westarete.com", "alexander.westarete.com"
-role :app, "shiitake.westarete.com", "alexander.westarete.com"
-role :db,  "shiitake.westarete.com", "alexander.westarete.com"
+role :web,  "alexander.westarete.com"
+role :app,  "alexander.westarete.com"
+role :db,   "alexander.westarete.com"
 
 set :deploy_to, "/var/www/domains/webiva.production.westarete.com"
 
