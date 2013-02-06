@@ -1,7 +1,6 @@
 set :application, "webiva"
 set :scm, :git
 set :repository, "git://github.com/westarete/Webiva.git"
-set :branch, "git:jobs-list-module"
 
 set :module_repository, "git://github.com/cykod/"
 
