@@ -8,9 +8,15 @@ role :web, "shiitake.westarete.com", "alexander.westarete.com"
 role :app, "shiitake.westarete.com", "alexander.westarete.com"
 role :db,  "shiitake.westarete.com", "alexander.westarete.com"
 
-set :deploy_to, "/var/www/domains/webiva.production.westarete.com"
+set :deploy_to, "/var/www/sites/webiva.production.westarete.com"
 
 ssh_options[:port] = 22222
+
+# The remote user to log in as.
+set :user, 'deploy'
+
+# Our setup does not require or allow sudo.
+set :use_sudo, false
 
 namespace :webiva do
   task :make_public_writeable do
