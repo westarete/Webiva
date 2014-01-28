@@ -4,13 +4,11 @@ set :repository, "git://github.com/westarete/Webiva.git"
 
 set :module_repository, "git://github.com/cykod/"
 
-role :web, "beta.westarete.com"
-role :app, "beta.westarete.com"
-role :db,  "beta.westarete.com"
+role :web, "beta.webiva.westarete.com"
+role :app, "beta.webiva.westarete.com"
+role :db,  "beta.webiva.westarete.com"
 
-set :deploy_to, "/var/www/sites/webiva.beta.westarete.com"
-
-ssh_options[:port] = 22222
+set :deploy_to, "/var/www/sites/beta.webiva.westarete.com"
 
 # The remote user to log in as.
 set :user, 'deploy'
