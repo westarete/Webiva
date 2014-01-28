@@ -29,7 +29,7 @@ namespace :webiva do
             modules_install     
 	    config
             run "cd #{deploy_to}/current; ./script/background.rb stop; true"
-            run "cd #{deploy.release_path}; bundle install --deployment --path #{deploy.shared_path}/vendor/bundler --without development test"
+            run "cd #{deploy.release_path}; bundle install --deployment --local --path #{deploy.shared_path}/vendor/bundler --without development test"
 	    deploy.symlink
 	    run "cd #{deploy.release_path}; rake -f #{deploy.release_path}/Rakefile cms:migrate_system_db"
 	    run "cd #{deploy.release_path}; rake -f #{deploy.release_path}/Rakefile cms:migrate_domain_dbs"
