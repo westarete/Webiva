@@ -35,7 +35,7 @@ namespace :webiva do
 	    run "cd #{deploy.release_path}; rake -f #{deploy.release_path}/Rakefile cms:migrate_domain_dbs"
 	    run "cd #{deploy.release_path}; rake -f #{deploy.release_path}/Rakefile cms:migrate_domain_components"
             run "cd #{deploy_to}/current; ./script/background.rb start; true"
-	    sudo "nohup /etc/init.d/memcached restart; true"
+	    sudo "service memcached restart"
     end
 
    deploy.restart
