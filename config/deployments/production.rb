@@ -16,9 +16,3 @@ set :user, 'deploy'
 # Our setup does not require or allow sudo.
 set :use_sudo, false
 
-namespace :webiva do
-  task :make_public_writeable do
-    run "sudo chown -Rh passenger #{deploy.release_path}/public/components"
-  end
-end
-after 'webiva:server_deploy', 'webiva:make_public_writeable'
