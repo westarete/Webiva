@@ -1,6 +1,14 @@
-## Developer Notes
+# West Arete's Fork of Webiva
 
-### Building Webiva on Mac OSX
+## Deployment
+
+Webiva runs capistrano with a wrapper. Use:
+
+    script/deploy production
+
+We don't have a staging or beta environment at the moment.
+
+## Building Webiva on Mac OSX
 
 The version of the rmagick gem that Webiva depends on will no longer build against Homebrew's imagemagick package. You'll likely have imagemagick installed via homebrew for development of newer apps, and you'll want to keep it for that reason. Fortunately, homebrew also provides a legacy imagemagick package called 'imagemagick-ruby186' that does work for building older versions of rmagick.
 
